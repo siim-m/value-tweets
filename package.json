@@ -8,12 +8,14 @@
     "start": "next start"
   },
   "dependencies": {
+    "autoprefixer": "^9.8.6",
     "dotenv": "^8.2.0",
     "mongodb": "^3.6.0",
     "mongoose": "^5.9.27",
     "next": "9.5.1",
     "react": "16.13.1",
     "react-dom": "16.13.1",
+    "tailwindcss": "^1.6.2",
     "twitter-lite": "^0.14.0"
   }
 }

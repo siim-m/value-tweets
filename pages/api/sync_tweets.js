@@ -19,24 +19,25 @@ export default async (req, res) => {
   })
 
 
-  // for (let page = 1; page <= 17; page++) {
-  //   const fetchedTweets = await app.get('statuses/user_timeline', {
-  //     screen_name: 'visualizevalue',
-  //     tweet_mode: 'extended',
-  //     count: 200,
-  //     page
-  //   })
+  for (let page = 1; page <= 17; page++) {
+    const fetchedTweets = await app.get('statuses/user_timeline', {
+      screen_name: 'visualizevalue',
+      tweet_mode: 'extended',
+      count: 200,
+      page
+    })
 
-  //   try {
-  //     // const storedTweet = await Tweet.create(fetchedTweets)
-  //   } catch (err) {
-  //     console.log('Found some duplicates');
-  //   }
-  // }
+    try {
+      const storedTweet = await Tweet.create(fetchedTweets)
+    } catch (err) {
+      console.log('Found some duplicates');
+    }
+  }
+  
+  // const tweets = await Tweet.find();
 
-  const tweets = await Tweet.find();
 
-  console.log(tweets.map(tweet => tweet.full_text))
+  // console.log(tweets.map(tweet => tweet.full_text))
 
   res.statusCode = 200
   res.json({ status: 'success' })

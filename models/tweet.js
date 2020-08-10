@@ -13,7 +13,7 @@ const TweetSchema = new mongoose.Schema({
   },
   full_text: String,
   display_text_range: [Number],
-  extended_entities: [Object],
+  extended_entities: Object,
   in_reply_to_status_id: Number,
   in_reply_to_user_id: Number,
   in_reply_to_screen_name: String,
