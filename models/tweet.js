@@ -6,8 +6,8 @@ import mongoose from 'mongoose';
 
 const TweetSchema = new mongoose.Schema({
   created_at: Date,
-  id: {
-    type: Number,
+  id_str: {
+    type: String,
     required: true,
     unique: true,
   },

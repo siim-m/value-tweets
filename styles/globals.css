@@ -2,4 +2,12 @@
 
 @tailwind components;
 
+body, html {
+  @apply h-full;
+}
+
+body {
+  @apply bg-black text-white;
+}
+
 @tailwind utilities;

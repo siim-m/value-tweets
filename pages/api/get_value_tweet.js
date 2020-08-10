@@ -18,12 +18,19 @@ export default async (req, res) => {
 
   const tweet = await Tweet.findOne(filters).skip(random);
 
+  console.log(tweet);
+
   // console.log('full_text', tweet.full_text);
   // console.log('media_url_https', tweet.extended_entities.media[0].media_url_https);
 
   res.statusCode = 200;
   res.json({
     full_text: tweet.full_text,
+    display_text: tweet.full_text.substring(tweet.display_text_range[0], tweet.display_text_range[1]),
+    url_https: `https://twitter.com/i/web/status/${tweet.id_str}`,
     media_url_https: tweet.extended_entities.media[0].media_url_https
   });
 }
+
+// https://twitter.com/visualizevalue/status/1087747981997236236
+// https://twitter.com/visualizevalue/status/1087747981997236200
