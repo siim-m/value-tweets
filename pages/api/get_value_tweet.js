@@ -13,15 +13,8 @@ export default async (req, res) => {
   }
 
   const count = await Tweet.countDocuments(filters);
-
   const random = Math.floor(Math.random() * count);
-
   const tweet = await Tweet.findOne(filters).skip(random);
-
-  console.log(tweet);
-
-  // console.log('full_text', tweet.full_text);
-  // console.log('media_url_https', tweet.extended_entities.media[0].media_url_https);
 
   res.statusCode = 200;
   res.json({

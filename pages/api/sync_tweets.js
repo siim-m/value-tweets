@@ -6,9 +6,6 @@ import Tweet from '../../models/tweet'
 export default async (req, res) => {
   await connectDb();
 
-  // console.log(req.headers)
-  // console.log(req)
-
   const user = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
     consumer_secret: process.env.TWITTER_CONSUMER_SECRET,
@@ -33,11 +30,6 @@ export default async (req, res) => {
       console.log('Found some duplicates');
     }
   }
-  
-  // const tweets = await Tweet.find();
-
-
-  // console.log(tweets.map(tweet => tweet.full_text))
 
   res.statusCode = 200
   res.json({ status: 'success' })

@@ -10,4 +10,8 @@ body {
   @apply bg-black text-white;
 }
 
+#__next {
+  @apply h-full;
+}
+
 @tailwind utilities;

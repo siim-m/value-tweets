@@ -16,6 +16,7 @@
     "react": "16.13.1",
     "react-dom": "16.13.1",
     "tailwindcss": "^1.6.2",
-    "twitter-lite": "^0.14.0"
+    "twitter-lite": "^0.14.0",
+    "typeface-rubik": "^0.0.72"
   }
 }

@@ -4,7 +4,11 @@ module.exports = {
     './**/*.jsx',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        sans: 'Rubik, Helvetica, Arial, sans-serif'
+      }
+    },
   },
   variants: {},
   plugins: [],
