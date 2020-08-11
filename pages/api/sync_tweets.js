@@ -31,7 +31,8 @@ export default async (req, res) => {
     try {
       await Tweet.create(fetchedTweets);
     } catch (err) {
-      console.log('Found some duplicates');
+      console.log('Found first duplicates, stopping...');
+      break;
     }
   }
 
