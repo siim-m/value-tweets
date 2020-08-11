@@ -18,19 +18,19 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="container mx-auto max-w-xl">
+    <div className="flex flex-col container mx-auto max-w-xl h-full">
       <Head>
         <title>@visualizevalue Tweet Generator</title>
         <meta name="description" content="@visualizevalue Tweet Generator" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center mt-12">
+      <main className="flex flex-col flex-grow items-center justify-center">
         <button
           type="button"
           aria-label="Refresh"
           onClick={fetchTweet}
-          className="outline-none focus:outline-none"
+          className="outline-none focus:outline-none mt-12"
         >
           <svg
             version="1.1"
@@ -76,7 +76,7 @@ export default function Home() {
           Original Tweet
         </a>
       </main>
-      <footer className="flex justify-between text-sm mt-6 mb-2">
+      <footer className="flex justify-between text-sm mt-8 mb-2">
         <div>
           Created by{' '}
           <a
