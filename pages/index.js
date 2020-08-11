@@ -25,7 +25,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <main className="flex flex-col items-center justify-center py-12">
+      <main className="flex flex-col items-center justify-center mt-12">
         <button
           type="button"
           aria-label="Refresh"
@@ -76,7 +76,7 @@ export default function Home() {
           Original Tweet
         </a>
       </main>
-      <footer className="flex justify-between text-sm py-2">
+      <footer className="flex justify-between text-sm mt-6 mb-2">
         <div>
           Created by{' '}
           <a
