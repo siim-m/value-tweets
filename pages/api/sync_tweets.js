@@ -4,6 +4,11 @@ import connectDb from '../../lib/mongoose';
 import Tweet from '../../models/tweet';
 
 export default async (req, res) => {
+  if (req.headers['x-auth-header'] !== process.env.API_KEY) {
+    res.statusCode = 401;
+    return res.json({ status: 'unauthorized' });
+  }
+
   await connectDb();
 
   const user = new Twitter({
