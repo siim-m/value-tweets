@@ -28,7 +28,7 @@ export default function Home() {
       <main className="flex flex-col items-center justify-center py-12">
         <button
           type="button"
-          name="refresh"
+          aria-label="Refresh"
           onClick={fetchTweet}
           className="outline-none focus:outline-none"
         >
