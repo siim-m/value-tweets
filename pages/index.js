@@ -24,11 +24,8 @@ export default function Home() {
         <meta name="description" content="@visualizevalue Tweet Generator" />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="@siim" />
+        <meta name="twitter:site" content="@siim" />
         <meta name="twitter:title" content="@visualizevalue Tweet Generator" />
-        <meta
-          name="twitter:description"
-          content="@visualizevalue Tweet Generator"
-        />
         <meta
           name="twitter:image"
           content="https://valuetweets.siim.me/twitter_card.png"
