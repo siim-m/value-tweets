@@ -21,12 +21,14 @@ export default function Home() {
     <div className="container mx-auto max-w-xl">
       <Head>
         <title>Value Tweets</title>
+        <meta name="description" content="@visualizevalue Tweet Generator" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
       <main className="flex flex-col items-center justify-center py-12">
         <button
           type="button"
+          name="refresh"
           onClick={fetchTweet}
           className="outline-none focus:outline-none"
         >
