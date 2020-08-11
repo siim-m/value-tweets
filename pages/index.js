@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <div className="container mx-auto max-w-xl">
       <Head>
-        <title>Value Tweets</title>
+        <title>@visualizevalue Tweet Generator</title>
         <meta name="description" content="@visualizevalue Tweet Generator" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -69,13 +69,36 @@ export default function Home() {
         />
         <a
           href={tweet.url_https}
-          className="block w-full text-xs text-right underline mt-6"
+          className="block w-full text-sm text-right underline mt-6"
           target="_blank"
           rel="noopener noreferrer"
         >
           Original Tweet
         </a>
       </main>
+      <footer className="flex justify-between text-sm py-2">
+        <div>
+          Created by{' '}
+          <a
+            href="https://twitter.com/siim"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            @siim
+          </a>
+        </div>
+        <div>
+          <a
+            href="https://github.com/siim-m/value-tweets"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="underline"
+          >
+            Source code
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
