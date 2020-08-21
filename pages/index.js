@@ -3,18 +3,31 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
   const [tweet, setTweet] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
 
-  const fetchTweet = () => {
-    fetch('/api/get_value_tweet')
-      .then(res => res.json())
-      .then(data => {
-        setTweet(data);
-      })
-      .catch(console.log);
+  const fetchTweet = async () => {
+    const res = await fetch('/api/get_value_tweet')
+    const tweet = res.json();
+    return tweet;
   };
 
+  const fetchImage = async (src) => {
+    const res = await fetch(src);
+    const imageBlob = res.blob();
+    return imageBlob;
+  }
+
+  const updatePage = async () => {
+    const tweet = await fetchTweet();
+    const imgBlob = await fetchImage(tweet.media_url_https);
+    tweet.media_url_https = URL.createObjectURL(imgBlob);
+    setTweet(tweet);
+  }
+
   useEffect(() => {
-    fetchTweet();
+    updatePage().then(() => {
+      setIsLoading(false);
+    })
   }, []);
 
   return (
@@ -38,7 +51,7 @@ export default function Home() {
           <button
             type="button"
             aria-label="Refresh"
-            onClick={fetchTweet}
+            onClick={updatePage}
             className="outline-none focus:outline-none mt-12"
           >
             <svg
@@ -70,20 +83,22 @@ export default function Home() {
               </g>
             </svg>
           </button>
-          <p className="text-xl mt-10">{tweet.display_text}</p>
-          <img
-            className="border border-white rounded-lg mt-10"
-            src={tweet.media_url_https}
-            alt={tweet.display_text}
-          />
-          <a
-            href={tweet.url_https}
-            className="block w-full text-sm text-right underline mt-6"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Original Tweet
+          <div className={isLoading ? 'hidden' : ''}>
+            <p className="text-xl mt-10">{tweet.display_text}</p>
+            <img
+              className="border border-white rounded-lg mt-10"
+              src={tweet.media_url_https}
+              alt={tweet.display_text}
+            />
+            <a
+              href={tweet.url_https}
+              className="block w-full text-sm text-right underline mt-6"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Original Tweet
           </a>
+          </div>
         </div>
       </main>
       <footer className="flex justify-between text-sm mt-8 mb-2">
