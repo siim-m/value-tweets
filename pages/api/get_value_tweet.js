@@ -4,8 +4,15 @@ import Tweet from '../../models/tweet';
 export default async (req, res) => {
   await connectDb();
 
+  const { handle } = req.query;
+
+  if (!handle) {
+    res.statusCode = 400;
+    return res.json({ error: 'Must provide handle in query string.' });
+  }
+
   const filters = {
-    'user.screen_name': 'visualizevalue',
+    'user.screen_name': handle,
     in_reply_to_status_id: null,
     retweeted_status: { $exists: false },
     'extended_entities.media': { $exists: true, $size: 1 },

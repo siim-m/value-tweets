@@ -1,34 +1,35 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export default function Home() {
-  const [tweet, setTweet] = useState({});
+  const [handle, setHandle] = useState('visualizevalue');
+  const [tweetData, setTweetData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTweet = async () => {
-    const res = await fetch('/api/get_value_tweet')
+    const res = await fetch(`/api/get_value_tweet?handle=${handle}`);
     const tweet = res.json();
     return tweet;
   };
 
-  const fetchImage = async (src) => {
+  const fetchImage = async src => {
     const res = await fetch(src);
     const imageBlob = res.blob();
     return imageBlob;
-  }
+  };
 
-  const updatePage = async () => {
+  const updatePage = useCallback(async () => {
     const tweet = await fetchTweet();
     const imgBlob = await fetchImage(tweet.media_url_https);
     tweet.media_url_https = URL.createObjectURL(imgBlob);
-    setTweet(tweet);
-  }
+    setTweetData(tweet);
+  }, []);
 
   useEffect(() => {
     updatePage().then(() => {
       setIsLoading(false);
-    })
-  }, []);
+    });
+  }, [updatePage]);
 
   return (
     <div className="flex flex-col h-full container mx-auto max-w-xl">
@@ -84,20 +85,20 @@ export default function Home() {
             </svg>
           </button>
           <div className={isLoading ? 'hidden' : ''}>
-            <p className="text-xl mt-10">{tweet.display_text}</p>
+            <p className="text-xl mt-10">{tweetData.display_text}</p>
             <img
               className="border border-white rounded-lg mt-10"
-              src={tweet.media_url_https}
-              alt={tweet.display_text}
+              src={tweetData.media_url_https}
+              alt={tweetData.display_text}
             />
             <a
-              href={tweet.url_https}
+              href={tweetData.url_https}
               className="block w-full text-sm text-right underline mt-6"
               target="_blank"
               rel="noopener noreferrer"
             >
               Original Tweet
-          </a>
+            </a>
           </div>
         </div>
       </main>
