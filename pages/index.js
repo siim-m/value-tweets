@@ -1,12 +1,13 @@
 import Head from 'next/head';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+import { handles } from '../config';
 
 export default function Home() {
-  const [handle, setHandle] = useState('visualizevalue');
   const [tweetData, setTweetData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
-  const fetchTweet = async () => {
+  const fetchTweet = async handle => {
     const res = await fetch(`/api/get_value_tweet?handle=${handle}`);
     const tweet = res.json();
     return tweet;
@@ -18,18 +19,21 @@ export default function Home() {
     return imageBlob;
   };
 
-  const updatePage = useCallback(async () => {
-    const tweet = await fetchTweet();
+  const updatePage = async () => {
+    const tweet = await fetchTweet(
+      handles[Math.floor(Math.random() * handles.length)]
+    );
     const imgBlob = await fetchImage(tweet.media_url_https);
     tweet.media_url_https = URL.createObjectURL(imgBlob);
+    console.log(tweet);
     setTweetData(tweet);
-  }, []);
+  };
 
   useEffect(() => {
     updatePage().then(() => {
       setIsLoading(false);
     });
-  }, [updatePage]);
+  }, []);
 
   return (
     <div className="flex flex-col h-full container mx-auto max-w-xl">
@@ -91,14 +95,24 @@ export default function Home() {
               src={tweetData.media_url_https}
               alt={tweetData.display_text}
             />
-            <a
-              href={tweetData.url_https}
-              className="block w-full text-sm text-right underline mt-6"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Original Tweet
-            </a>
+            <div className="flex justify-between">
+              <a
+                href={`https://twitter.com/${tweetData.user?.screen_name}`}
+                className="block w-full text-sm underline mt-6"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {`@${tweetData.user?.screen_name}`}
+              </a>
+              <a
+                href={tweetData.url_https}
+                className="block w-full text-sm text-right underline mt-6"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Original Tweet
+              </a>
+            </div>
           </div>
         </div>
       </main>

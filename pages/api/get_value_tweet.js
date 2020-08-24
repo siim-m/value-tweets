@@ -31,5 +31,6 @@ export default async (req, res) => {
     ),
     url_https: `https://twitter.com/i/web/status/${tweet.id_str}`,
     media_url_https: tweet.extended_entities.media[0].media_url_https,
+    user: tweet.user,
   });
 };
