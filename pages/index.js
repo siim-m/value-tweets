@@ -8,7 +8,7 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
 
   const fetchTweet = async handle => {
-    const res = await fetch(`/api/get_value_tweet?handle=${handle}`);
+    const res = await fetch(`/api/get?handle=${handle}`);
     const tweet = res.json();
     return tweet;
   };

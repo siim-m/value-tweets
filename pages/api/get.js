@@ -15,7 +15,11 @@ export default async (req, res) => {
     'user.screen_name': handle,
     in_reply_to_status_id: null,
     retweeted_status: { $exists: false },
-    'extended_entities.media': { $exists: true, $size: 1 },
+    'extended_entities.media': {
+      $exists: true,
+      $size: 1,
+      $elemMatch: { type: 'photo' },
+    },
   };
 
   const count = await Tweet.countDocuments(filters);
