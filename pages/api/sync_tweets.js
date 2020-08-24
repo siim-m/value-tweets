@@ -9,7 +9,14 @@ export default async (req, res) => {
     return res.json({ status: 'unauthorized' });
   }
 
+  if (req.method !== 'POST') {
+    res.statusCode = 400;
+    return res.json({ error: 'Only POST is allowed.' });
+  }
+
   await connectDb();
+
+  const handle = req.body;
 
   const user = new Twitter({
     consumer_key: process.env.TWITTER_CONSUMER_KEY,
@@ -22,7 +29,7 @@ export default async (req, res) => {
 
   for (let page = 1; page <= 17; page += 1) {
     const fetchedTweets = await app.get('statuses/user_timeline', {
-      screen_name: 'visualizevalue',
+      screen_name: handle,
       tweet_mode: 'extended',
       count: 200,
       page,
