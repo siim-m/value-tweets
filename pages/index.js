@@ -38,12 +38,15 @@ export default function Home() {
   return (
     <div className="flex flex-col h-full container mx-auto max-w-xl">
       <Head>
-        <title>@visualizevalue Tweet Generator</title>
-        <meta name="description" content="@visualizevalue Tweet Generator" />
+        <title>Valuetweets</title>
+        <meta
+          name="description"
+          content="A showcase of random tweets by prolific Twitter accounts from the Visualize Value community"
+        />
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:creator" content="@siim" />
         <meta name="twitter:site" content="@siim" />
-        <meta name="twitter:title" content="@visualizevalue Tweet Generator" />
+        <meta name="twitter:title" content="Valuetweets" />
         <meta
           name="twitter:image"
           content="https://valuetweets.siim.me/twitter_card.png"
