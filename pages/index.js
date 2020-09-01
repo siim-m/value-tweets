@@ -6,6 +6,7 @@ import { handles } from '../config';
 export default function Home() {
   const [tweetData, setTweetData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [isSpinning, setIsSpinning] = useState(false);
 
   const fetchTweet = async handle => {
     const res = await fetch(`/api/get?handle=${handle}`);
@@ -20,6 +21,7 @@ export default function Home() {
   };
 
   const updatePage = async () => {
+    setIsLoading(true);
     const tweet = await fetchTweet(
       handles[Math.floor(Math.random() * handles.length)]
     );
@@ -27,12 +29,11 @@ export default function Home() {
     tweet.media_url_https = URL.createObjectURL(imgBlob);
     console.log(tweet);
     setTweetData(tweet);
+    setIsLoading(false);
   };
 
   useEffect(() => {
-    updatePage().then(() => {
-      setIsLoading(false);
-    });
+    updatePage();
   }, []);
 
   return (
@@ -59,8 +60,14 @@ export default function Home() {
           <button
             type="button"
             aria-label="Refresh"
-            onClick={updatePage}
-            className="outline-none focus:outline-none mt-12"
+            onClick={async () => {
+              setIsSpinning(true);
+              await updatePage();
+              setIsSpinning(false);
+            }}
+            className={`outline-none focus:outline-none mt-12 ${
+              isSpinning ? 'animate-spin-once' : ''
+            }`}
           >
             <svg
               version="1.1"
