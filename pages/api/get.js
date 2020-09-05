@@ -13,6 +13,7 @@ export default async (req, res) => {
 
   const filters = {
     'user.screen_name': handle,
+    is_deleted: false,
     in_reply_to_status_id: null,
     retweeted_status: { $exists: false },
     'extended_entities.media': {
