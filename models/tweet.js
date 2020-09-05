@@ -18,13 +18,13 @@ const TweetSchema = new mongoose.Schema({
   in_reply_to_user_id: Number,
   in_reply_to_screen_name: String,
   user: {
-    id: Number,
+    id_str: String,
     screen_name: String,
   },
   favorite_count: Number,
   retweeted_status: Object,
   retweet_count: Number,
+  is_deleted: Boolean,
 });
 
-export default mongoose.models.tweet ||
-  mongoose.model('tweet', TweetSchema);
+export default mongoose.models.tweet || mongoose.model('tweet', TweetSchema);

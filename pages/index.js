@@ -27,7 +27,6 @@ export default function Home() {
     );
     const imgBlob = await fetchImage(tweet.media_url_https);
     tweet.media_url_https = URL.createObjectURL(imgBlob);
-    console.log(tweet);
     setTweetData(tweet);
     setIsLoading(false);
   };
