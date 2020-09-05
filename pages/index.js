@@ -1,39 +1,37 @@
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+import absoluteUrl from 'next-absolute-url';
+import { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import { handles } from '../config';
 
-export default function Home() {
-  const [tweetData, setTweetData] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
+const fetchTweet = async (handle, baseUrl) => {
+  const res = await fetch(`${baseUrl || ''}/api/get?handle=${handle}`);
+  const tweet = res.json();
+  return tweet;
+};
+
+const fetchImage = async src => {
+  const res = await fetch(src);
+  const imageBlob = res.blob();
+  return imageBlob;
+};
+
+export default function Home({ tweet }) {
+  const [tweetData, setTweetData] = useState(tweet);
+  const [isLoading, setIsLoading] = useState(false);
   const [isSpinning, setIsSpinning] = useState(false);
-
-  const fetchTweet = async handle => {
-    const res = await fetch(`/api/get?handle=${handle}`);
-    const tweet = res.json();
-    return tweet;
-  };
-
-  const fetchImage = async src => {
-    const res = await fetch(src);
-    const imageBlob = res.blob();
-    return imageBlob;
-  };
 
   const updatePage = async () => {
     setIsLoading(true);
-    const tweet = await fetchTweet(
+    const newTweet = await fetchTweet(
       handles[Math.floor(Math.random() * handles.length)]
     );
-    const imgBlob = await fetchImage(tweet.media_url_https);
-    tweet.media_url_https = URL.createObjectURL(imgBlob);
-    setTweetData(tweet);
+    const imgBlob = await fetchImage(newTweet.media_url_https);
+    newTweet.media_url_https = URL.createObjectURL(imgBlob);
+    setTweetData(newTweet);
     setIsLoading(false);
   };
-
-  useEffect(() => {
-    updatePage();
-  }, []);
 
   return (
     <div className="flex flex-col h-full container mx-auto max-w-xl">
@@ -151,3 +149,23 @@ export default function Home() {
     </div>
   );
 }
+
+export const getServerSideProps = async ({ req }) => {
+  const { protocol, host } = absoluteUrl(req);
+  const baseUrl = req ? `${protocol}//${host}` : '';
+  console.log(baseUrl);
+  const tweet = await fetchTweet(
+    handles[Math.floor(Math.random() * handles.length)],
+    baseUrl
+  );
+
+  return {
+    props: {
+      tweet,
+    },
+  };
+};
+
+Home.propTypes = {
+  tweet: PropTypes.object,
+};
