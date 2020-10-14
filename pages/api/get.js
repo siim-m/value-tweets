@@ -27,6 +27,11 @@ export default async (req, res) => {
   const random = Math.floor(Math.random() * count);
   const tweet = await Tweet.findOne(filters).skip(random);
 
+  if (!tweet) {
+    res.statusCode = 404;
+    return res.json(null);
+  }
+
   res.statusCode = 200;
   res.json({
     full_text: tweet.full_text,

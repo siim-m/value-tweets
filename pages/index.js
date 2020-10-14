@@ -7,8 +7,8 @@ import { handles } from '../config';
 
 const fetchTweet = async (handle, baseUrl) => {
   const res = await fetch(`${baseUrl || ''}/api/get?handle=${handle}`);
-  const tweet = res.json();
-  return tweet;
+  if (!res.ok) return null;
+  return res.json();
 };
 
 const fetchImage = async src => {
@@ -23,18 +23,23 @@ export default function Home({ tweet }) {
   const [isSpinning, setIsSpinning] = useState(false);
 
   const updatePage = async () => {
+    setIsSpinning(true);
     setIsLoading(true);
-    const newTweet = await fetchTweet(
-      handles[Math.floor(Math.random() * handles.length)]
-    );
+    let newTweet;
+    while (!newTweet) {
+      newTweet = await fetchTweet(
+        handles[Math.floor(Math.random() * handles.length)]
+      );
+    }
     const imgBlob = await fetchImage(newTweet.media_url_https);
     newTweet.media_url_https = URL.createObjectURL(imgBlob);
     setTweetData(newTweet);
     setIsLoading(false);
+    setIsSpinning(false);
   };
 
   return (
-    <div className="flex flex-col h-full container mx-auto max-w-xl">
+    <div className="container flex flex-col h-full max-w-xl mx-auto">
       <Head>
         <title>Valuetweets</title>
         <meta
@@ -57,11 +62,7 @@ export default function Home({ tweet }) {
           <button
             type="button"
             aria-label="Refresh"
-            onClick={async () => {
-              setIsSpinning(true);
-              await updatePage();
-              setIsSpinning(false);
-            }}
+            onClick={updatePage}
             className={`outline-none focus:outline-none mt-12 ${
               isSpinning ? 'animate-spin-once' : ''
             }`}
@@ -74,7 +75,7 @@ export default function Home({ tweet }) {
               y="0px"
               viewBox="0 0 489.711 489.711"
               fill="currentColor"
-              className="h-10 w-10"
+              className="w-10 h-10"
             >
               <g>
                 <g>
@@ -96,16 +97,16 @@ export default function Home({ tweet }) {
             </svg>
           </button>
           <div className={isLoading ? 'hidden' : ''}>
-            <p className="text-xl mt-10">{tweetData.display_text}</p>
+            <p className="mt-10 text-xl">{tweetData.display_text}</p>
             <img
-              className="border border-white rounded-lg mt-10"
+              className="mt-10 border border-white rounded-lg"
               src={tweetData.media_url_https}
               alt={tweetData.display_text}
             />
             <div className="flex justify-between">
               <a
                 href={`https://twitter.com/${tweetData.user?.screen_name}`}
-                className="block w-full text-sm underline mt-6"
+                className="block w-full mt-6 text-sm underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -113,7 +114,7 @@ export default function Home({ tweet }) {
               </a>
               <a
                 href={tweetData.url_https}
-                className="block w-full text-sm text-right underline mt-6"
+                className="block w-full mt-6 text-sm text-right underline"
                 target="_blank"
                 rel="noopener noreferrer"
               >
@@ -123,7 +124,7 @@ export default function Home({ tweet }) {
           </div>
         </div>
       </main>
-      <footer className="flex justify-between text-sm mt-8 mb-2">
+      <footer className="flex justify-between mt-8 mb-2 text-sm">
         <div>
           Created by{' '}
           <a
