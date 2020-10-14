@@ -26,22 +26,28 @@ export default async (req, res) => {
     bearer_token: response.access_token,
   });
 
+  const fetchedTweetsPromises = [];
+
   for (const handle of handles) {
     for (let page = 1; page <= 17; page += 1) {
-      const fetchedTweets = await app.get('statuses/user_timeline', {
+      const fetchedTweetsPromise = app.get('statuses/user_timeline', {
         screen_name: handle,
         tweet_mode: 'extended',
         count: 200,
         page,
       });
 
-      try {
-        await Tweet.create(fetchedTweets);
-      } catch (err) {
-        console.log('Found first duplicates, stopping...');
-        break;
-      }
+      fetchedTweetsPromises.push(fetchedTweetsPromise);
     }
+  }
+  const fetchedTweets = (await Promise.all(fetchedTweetsPromises)).flat();
+
+  console.log('fetchedTweets', fetchedTweets);
+
+  try {
+    await Tweet.create(fetchedTweets);
+  } catch (err) {
+    console.log('Found first duplicates...\n', err);
   }
 
   res.statusCode = 200;

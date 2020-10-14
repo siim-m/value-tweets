@@ -1,1 +1,6 @@
-export const handles = ['visualizevalue', 'producemore', 'microwisdoms'];
+export const handles = [
+  'visualizevalue',
+  'producemore',
+  'microwisdoms',
+  'value',
+];

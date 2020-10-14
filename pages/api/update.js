@@ -37,43 +37,65 @@ export default async (req, res) => {
   // Split into chunks of 100 — maximum number supported by statuses/lookup endpoint
   const tweetChunks = chunkArray(tweets, 100);
 
+  const fetchedTweetsPromises = [];
+
+  const updatePromises = [];
+
+  // create promises for async processing
   for (const chunk of tweetChunks) {
     const ids = chunk.map(tweet => tweet.id_str);
 
-    const fetchedTweets = await app.get(`statuses/lookup`, {
+    const fetchedTweetsPromise = app.get(`statuses/lookup`, {
       id: ids.join(','),
     });
 
+    fetchedTweetsPromises.push(fetchedTweetsPromise);
+  }
+
+  // grab data from promises
+  const fetchedTweetsArrays = await Promise.all(fetchedTweetsPromises);
+
+  // loop over chunks again and compare to resolved promises
+  for (const [index, chunk] of tweetChunks.entries()) {
     // Process deleted tweets
-    if (chunk.length !== fetchedTweets.length) {
+    if (chunk.length !== fetchedTweetsArrays[index].length) {
       // logic to handle detection of deleted tweets
       for (const tweet of chunk) {
-        const found = fetchedTweets.find(
+        const found = fetchedTweetsArrays[index].find(
           fetchedTweet => fetchedTweet.id_str === tweet.id_str
         );
         if (!found) {
           // console.log('Marking as deleted: ', tweet.id_str);
-          await Tweet.findOneAndUpdate(
-            { id_str: tweet.id_str },
-            { is_deleted: true }
+
+          updatePromises.push(
+            Tweet.findOneAndUpdate(
+              { id_str: tweet.id_str },
+              { is_deleted: true }
+            )
           );
+
           deletedCount += 1;
         }
       }
     }
 
     // Update stored tweet stats
-    for (const fetchedTweet of fetchedTweets) {
-      await Tweet.findOneAndUpdate(
-        { id_str: fetchedTweet.id_str },
-        {
-          ...fetchedTweet,
-          is_deleted: false,
-        }
+    for (const fetchedTweet of fetchedTweetsArrays[index]) {
+      updatePromises.push(
+        Tweet.findOneAndUpdate(
+          { id_str: fetchedTweet.id_str },
+          {
+            ...fetchedTweet,
+            is_deleted: false,
+          }
+        )
       );
+
       updatedCount += 1;
     }
   }
+
+  await Promise.all(updatePromises);
 
   res.statusCode = 200;
   res.json({ status: 'success', deletedCount, updatedCount });
